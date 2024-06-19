@@ -3,6 +3,7 @@ import {
   FormDescription,
   FormField,
   FormItem,
+  FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useFormContext } from "react-hook-form";
@@ -27,8 +28,18 @@ const ImageSection = () => {
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Input />
+                <Input
+                  className="bg-white"
+                  type="file"
+                  accept=".jpg, .jpeg, .png"
+                  onChange={(event) =>
+                    field.onChange(
+                      event.target.files ? event.target.files[0] : null
+                    )
+                  }
+                />
               </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />
