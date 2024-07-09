@@ -6,7 +6,7 @@ const searchRestaurant = async (req: Request, res: Response) => {
     const city = req.params.city;
 
     const searchQuery = (req.query.searchQuery as string) || "";
-    const selectedCuisines = (req.query.searchQuery as string) || "";
+    const selectedCuisines = (req.query.selectedCuisines as string) || "";
     const sortOption = (req.query.sortOption as string) || "lastUpdated";
     const page = parseInt(req.query.page as string) || 1;
 
@@ -26,22 +26,16 @@ const searchRestaurant = async (req: Request, res: Response) => {
     }
 
     if (selectedCuisines) {
-      // URL = selectedCusisines = italian, burgers, chinese
-      // [italian, burgers, chinese]
       const cuisinesArray = selectedCuisines
         .split(",")
         .map((cuisine) => new RegExp(cuisine, "i"));
 
-      query["cuisine"] = { $all: cuisinesArray };
+      query["cuisines"] = { $all: cuisinesArray };
     }
 
     if (searchQuery) {
-      // restaurantName = Pizza Palace
-      // cuisines = [pizza, pasta, italian]
-      // searchQuery = Pasta
       const searchRegex = new RegExp(searchQuery, "i");
-
-      query["%or"] = [
+      query["$or"] = [
         { restaurantName: searchRegex },
         { cuisines: { $in: [searchRegex] } },
       ];
@@ -50,6 +44,7 @@ const searchRestaurant = async (req: Request, res: Response) => {
     const pageSize = 10;
     const skip = (page - 1) * pageSize;
 
+    // sortOption = "lastUpdated"
     const restaurants = await Restaurant.find(query)
       .sort({ [sortOption]: 1 })
       .skip(skip)

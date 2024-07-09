@@ -1,5 +1,5 @@
-import { Request, Response, NextFunction } from "express";
 import { body, validationResult } from "express-validator";
+import { Request, Response, NextFunction } from "express";
 
 const handleValidationErrors = async (
   req: Request,
@@ -33,7 +33,7 @@ export const validateMyRestaurantRequest = [
     .withMessage("Delivery price must be a positive number"),
   body("estimatedDeliveryTime")
     .isInt({ min: 0 })
-    .withMessage("Estimated delivery time must be a positive integar"),
+    .withMessage("Estimated delivery time must be a postivie integar"),
   body("cuisines")
     .isArray()
     .withMessage("Cuisines must be an array")
@@ -44,6 +44,6 @@ export const validateMyRestaurantRequest = [
   body("menuItems.*.name").notEmpty().withMessage("Menu item name is required"),
   body("menuItems.*.price")
     .isFloat({ min: 0 })
-    .withMessage("Menu item price is required and must be a positive number"),
+    .withMessage("Menu item price is required and must be a postive number"),
   handleValidationErrors,
 ];
