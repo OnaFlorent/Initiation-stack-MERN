@@ -80,7 +80,7 @@ const createCheckoutSession = async (req: Request, res: Response) => {
 
     const newOrder = new Order({
       restaurant: restaurant,
-      uder: req.userId,
+      user: req.userId,
       status: "placed",
       deliveryDetails: checkoutSessionRequest.deliveryDetails,
       cartItems: checkoutSessionRequest.cartItems,
@@ -104,7 +104,6 @@ const createCheckoutSession = async (req: Request, res: Response) => {
     }
 
     await newOrder.save();
-
     res.json({ url: session.url });
   } catch (error: any) {
     console.log(error);
@@ -116,10 +115,6 @@ const createLineItems = (
   checkoutSessionRequest: CheckoutSessionRequest,
   menuItems: MenuItemType[]
 ) => {
-  // 1. foreach cartItem, get the menuItem object from the restaurant (to get the price)
-  // 2. foreach cartItem, convert it to a stripe line item
-  // 3. return line item array
-
   const lineItems = checkoutSessionRequest.cartItems.map((cartItem) => {
     const menuItem = menuItems.find(
       (item) => item._id.toString() === cartItem.menuItemId.toString()
